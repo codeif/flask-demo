@@ -10,8 +10,11 @@
 """
 
 import os
-from celery import Celery
+import logging
+
 from flask import Flask
+from flask.logging import PROD_LOG_FORMAT
+from celery import Celery
 
 
 def create_app(config=None):
@@ -20,6 +23,17 @@ def create_app(config=None):
     if config is None:
         config = os.environ.get('DEMO_APP_SETTINGS', 'demo.config.Config')
     app.config.from_object(config)
+
+    if not app.debug:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(PROD_LOG_FORMAT))
+
+        logger_level = app.config.get('LOGGER_LEVEL')
+        if logger_level is not None:
+            handler.setLevel(logger_level)
+            app.logger.setLevel(logger_level)
+
+        app.logger.addHandler(handler)
 
     return app
 
