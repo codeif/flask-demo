@@ -27,10 +27,10 @@ secret_key生成方式::
     In [2]: os.urandom(10)
     Out[2]: '\xd4m1<w\x15\xe2?\x1e\xe3'
 
+celery
+------
 
-Celery使用 flask-fabtic_ 部署
-
+- deploy celery via flask-fabric_.
 
 .. _overholt: https://github.com/mattupstate/overholt
-.. _falsk-fabric: https://github.com/codeif/flask-fabric
-
+.. _flask-fabric: https://github.com/codeif/flask-fabric
