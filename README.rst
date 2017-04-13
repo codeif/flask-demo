@@ -32,5 +32,35 @@ celery
 
 - deploy celery via flask-fabric_.
 
+使用过程
+--------
+
+- clone
+
+    https://github.com/codeif/flask-demo.git
+
+- 删除目录
+
+    rm -rf .git fabfile
+
+- 使用pycharm重构 demo -> <your name>
+
+- 替换文件内容
+
+  - Linux
+
+      find . -not -path '*/\.*' -type f -exec sed -i 's/demo/<new name>/g; s/DEMO/<NEW NAME>/g' {} \;
+
+  - macOS
+
+      find . -not -path '*/\.*' -type f -exec sed -i '' 's/demo/wat/g; s/DEMO/WAT/g' {} \;
+
+- 使用git管理
+
+.. code-block::
+
+    git init
+    git submodule add https://github.com/codeif/flask-fabric.git fabfile
+
 .. _overholt: https://github.com/mattupstate/overholt
 .. _flask-fabric: https://github.com/codeif/flask-fabric
