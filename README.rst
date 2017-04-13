@@ -28,7 +28,7 @@ secret_key生成方式::
     Out[2]: '\xd4m1<w\x15\xe2?\x1e\xe3'
 
 
-Celery使用flask-fabtic_ 部署
+Celery使用 flask-fabtic_ 部署
 
 
 .. _overholt: https://github.com/mattupstate/overholt
