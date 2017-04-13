@@ -28,34 +28,9 @@ secret_key生成方式::
     Out[2]: '\xd4m1<w\x15\xe2?\x1e\xe3'
 
 
-Celery的supervisor配置::
-
-    [program:demo-celery]
-    environment=DEMO_APP_SETTINGS="demo.config.ProductionConfig"
-    command=/home/ubuntu/.virtualenvs/demo/bin/celery -A demo.tasks worker --loglevel=INFO
-
-    directory=/srv/demo/www
-    user=www-data
-    numprocs=1
-    stdout_logfile=/var/log/celery/demo-stdout.log
-    stderr_logfile=/var/log/celery/demo-stderr.log
-    autostart=true
-    autorestart=true
-    startsecs=10
-
-    ; Need to wait for currently executing tasks to finish at shutdown.
-    ; Increase this if you have very long running tasks.
-    stopwaitsecs = 600
-
-    ; When resorting to send SIGKILL to the program to terminate it
-    ; send SIGKILL to its whole process group instead,
-    ; taking care of its children as well.
-    killasgroup=true
-
-    ; Set Celery priority higher than default (999)
-    ; so, if rabbitmq is supervised, it will start first.
-    priority=1000
+Celery使用flask-fabtic_ 部署
 
 
 .. _overholt: https://github.com/mattupstate/overholt
+.. _falsk-fabric: https://github.com/codeif/flask-fabric
 
