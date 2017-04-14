@@ -37,7 +37,9 @@ celery
 
 - clone
 
-    https://github.com/codeif/flask-demo.git
+  .. code-block::
+
+      git clone https://github.com/codeif/flask-demo.git
 
 - 删除目录
 
