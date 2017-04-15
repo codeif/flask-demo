@@ -61,7 +61,7 @@ celery
 
     .. code-block::
     
-      find . -not -path '*/\.*' -type f -exec sed -i '' 's/demo/wat/g; s/DEMO/WAT/g' {} \;
+      find . -not -path '*/\.*' -type f -exec sed -i '' 's/<new name>/<NEW NAME>/g; s/DEMO/WAT/g' {} \;
 
 - 使用git管理
 
