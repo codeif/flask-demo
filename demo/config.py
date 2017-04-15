@@ -4,7 +4,7 @@ import logging
 
 class Config(object):
     DEBUG = False
-    SECRET_KEY = '\xd4m1<w\x15\xe2?\x1e\xe3'
+    SECRET_KEY = b'\xd4m1<w\x15\xe2?\x1e\xe3'
 
     # logger settings
     LGGER_LEVEL = logging.WARN  # app.debug False有效
