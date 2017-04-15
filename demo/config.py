@@ -11,8 +11,8 @@ class Config(object):
     LOGGER_HANDLER_POLICY = 'debug'
 
     # Flask-SQLAlchemy config
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../sqllite.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1/demo'
     SQLALCHEMY_ECHO = False
 
     # Celery config
