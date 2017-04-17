@@ -45,7 +45,7 @@ celery
 
   .. code-block::
   
-    rm -rf .git fabfile
+    rm -rf .git .gitmodules fabfile
 
 - 使用pycharm重构 demo -> <your name>
 
