@@ -59,6 +59,9 @@ class JSONSerializer(object):
     def _get_serial_value(self, key):
         """JSON serializer for objects not serializable by default json code"""
         val = getattr(self, key)
+        return self._serial_value(val)
+
+    def _serial_value(self, val):
         if val is None or isinstance(val, (str, int)):
             pass
         elif isinstance(val, Decimal):
