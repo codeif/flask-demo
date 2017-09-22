@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import jsonify, request, abort
+from flask_bootstrap import Bootstrap
+
 from . import factory
 from .helpers import register_blueprints
 from .exceptions import CustomException, FormValidationError
@@ -8,6 +10,7 @@ from .exceptions import CustomException, FormValidationError
 def create_app(config=None):
     app = factory.create_app(config)
 
+    Bootstrap(app)
     configure_error_handles(app)
 
     # register blueprints

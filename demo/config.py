@@ -27,6 +27,9 @@ class Config(object):
     MAIL_USERNAME = 'you@exampl.ecom'
     MAIL_PASSWORD = 'your email password'
 
+    # Flask-Bootstrap config
+    BOOTSTRAP_SERVE_LOCAL = True
+
 
 class ProductionConfig(Config):
     pass

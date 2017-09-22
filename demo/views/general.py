@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint
+from flask import Blueprint, render_template
 from flask.views import MethodView
 
 from ..exceptions import NoError, LoginRequired, FormValidationError
@@ -35,8 +35,14 @@ class CeleryTestView(MethodView):
         return 'ok'
 
 
+class BootstrapView(MethodView):
+    def get(self):
+        return render_template('bootstrap.html')
+
+
 bp.add_url_rule('/', view_func=IndexView.as_view('index'))
 bp.add_url_rule('/error', view_func=ErrorView.as_view('error'))
 bp.add_url_rule('/form-error', view_func=FormErrorView.as_view('form_error'))
 bp.add_url_rule('/celery-test',
                 view_func=CeleryTestView.as_view('celery_test'))
+bp.add_url_rule('/bootstrap', view_func=BootstrapView.as_view('bootstrap'))
