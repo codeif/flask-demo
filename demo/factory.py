@@ -16,7 +16,7 @@ from flask import Flask
 from flask.logging import PROD_LOG_FORMAT
 from celery import Celery
 
-from .core import db
+from .core import db, migrate
 
 
 def create_app(config=None):
@@ -39,6 +39,7 @@ def create_app(config=None):
         app.logger.addHandler(handler)
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     return app
 
