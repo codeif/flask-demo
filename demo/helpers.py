@@ -75,10 +75,10 @@ class JSONSerializer(object):
         elif isinstance(val, JSONSerializer):
             val = val.to_json_simple()
         elif isinstance(val, list):
-            l = []
+            li = []
             for item in val:
-                l.append(self._serial_value(item))
-            val = l
+                li.append(self._serial_value(item))
+            val = li
 
         return val
 

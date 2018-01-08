@@ -31,7 +31,7 @@ def create_app(config=None):
         handler = logging.StreamHandler()
         handler.setFormatter(logging.Formatter(PROD_LOG_FORMAT))
 
-        logger_level = app.config.get('LOGGER_LEVEL')
+        logger_level = app.config.get('LOG_LEVEL')
         if logger_level is not None:
             handler.setLevel(logger_level)
             app.logger.setLevel(logger_level)

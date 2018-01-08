@@ -7,8 +7,7 @@ class Config(object):
     SECRET_KEY = b'\xd4m1<w\x15\xe2?\x1e\xe3'
 
     # logger settings
-    LGGER_LEVEL = logging.WARN  # app.debug False有效
-    LOGGER_HANDLER_POLICY = 'debug'
+    LOG_LEVEL = logging.WARN
 
     # Flask-SQLAlchemy config
     SQLALCHEMY_TRACK_MODIFICATIONS = False
