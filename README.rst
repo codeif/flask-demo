@@ -3,7 +3,7 @@ Flask-Demo
 
 测试服运行::
 
-    python manage.py [-c demo.config.YourConfig] runsert -p 8080
+    python manage.py [-c demo.config.YourConfig] runserver -p 8080
 
 正式服可以使用uwsgi
 
