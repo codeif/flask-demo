@@ -35,7 +35,15 @@ def register_blueprints(app, import_path, bp_name='bp'):
 
 
 def register_api(bp, view, endpoint, url, pk='item_id', pk_type='int'):
-    """register restful api router"""
+    """register restful api router
+
+    :param bp: flask.BluePrint object
+    :param view: flask.views.View object
+    :param endpoint: endpint
+    :param url: url path, eg: /users
+    :param pk: entity id variable name
+    :param pk_type: http://flask.pocoo.org/docs/0.12/quickstart/#variable-rules
+    """
     view_func = view.as_view(endpoint)
     bp.add_url_rule(url, defaults={pk: None},
                     view_func=view_func, methods=['GET'])
