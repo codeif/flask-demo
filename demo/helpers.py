@@ -11,8 +11,9 @@
 
 import importlib
 from datetime import datetime, date, time
-from numbers import Number
-from decimal import Decimal
+import decimal
+import uuid
+import json as _json
 
 from flask import Blueprint
 
@@ -53,10 +54,27 @@ def register_api(bp, view, endpoint, url, pk='item_id', pk_type='int'):
                     methods=['GET', 'PUT', 'DELETE', 'PATCH'])
 
 
-class JSONSerializer(object):
-    _json_include = None
-    _json_exclude = None
-    _json_simple = None
+class JSONEncoder(_json.JSONEncoder):
+    def default(self, o):
+        # See "Date Time String Format" in the ECMA-262 specification.
+        if isinstance(o, datetime):
+            return o.isoformat(sep=' ', timespec='seconds')
+        if isinstance(o, date):
+            return o.isoformat()
+        if isinstance(o, time):
+            return o.isoformat(timespec='seconds')
+        if isinstance(o, decimal.Decimal):
+            return float(o)
+        if isinstance(o, uuid.UUID):
+            return str(o)
+        else:
+            return super().default(o)
+
+
+class DictModel(object):
+    _todict_include = None
+    _todict_exclude = None
+    _todict_simple = None
 
     def get_field_names(self):
         # for p in self.__mapper__.iterate_properties:
@@ -64,45 +82,19 @@ class JSONSerializer(object):
         # _keys = self.__mapper__.c.keys()
         return [x.name for x in self.__table__.columns]
 
-    def _get_serial_value(self, key):
-        """JSON serializer for objects not serializable by default json code"""
-        val = getattr(self, key)
-        return self._serial_value(val)
-
-    def _serial_value(self, val):
-        if val is None or isinstance(val, (str, int)):
-            pass
-        elif isinstance(val, Decimal):
-            return float(val)
-        elif isinstance(val, Number):
-            pass
-        elif isinstance(val, datetime):
-            val = val.isoformat(' ')
-        elif isinstance(val, (date, time)):
-            val = val.isoformat()
-        elif isinstance(val, JSONSerializer):
-            val = val.to_json_simple()
-        elif isinstance(val, list):
-            li = []
-            for item in val:
-                li.append(self._serial_value(item))
-            val = li
-
-        return val
-
-    def _get_json_keys(self, include, exclude, only):
+    def _get_todict_keys(self, include=None, exclude=None, only=None):
         if only:
             return only
 
         exclude_set = {'password', 'insert_time'}
-        if self._json_exclude:
-            exclude_set.update(self._json_exclude)
+        if self._todict_exclude:
+            exclude_set.update(self._todict_exclude)
         if exclude:
             exclude_set.update(exclude)
 
         include_set = set()
-        if self._json_include:
-            include_set.update(self._json_include)
+        if self._todict_include:
+            include_set.update(self._todict_include)
         if include:
             include_set.update(include)
 
@@ -112,12 +104,12 @@ class JSONSerializer(object):
 
         return keys_set
 
-    def to_json(self, include=None, exclude=None, only=None):
-        keys = self._get_json_keys(include, exclude, only)
+    def todict(self, include=None, exclude=None, only=None):
+        keys = self._get_todict_keys(include, exclude, only)
         data = {key: self._get_serial_value(key) for key in keys}
         return data or None
 
-    def to_json_simple(self):
-        only = self._json_simple or [x for x in self.get_field_names() if
-                                     x in ['id', 'name']]
-        return self.to_json(only=only)
+    def todict_simple(self):
+        only = self._todict_simple or [x for x in self._get_todict_keys()
+                                       if x in ['id', 'name']]
+        return self.to_dict(only=only)
