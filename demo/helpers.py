@@ -13,9 +13,10 @@ import importlib
 from datetime import datetime, date, time
 import decimal
 import uuid
-import json as _json
+import json
 
 from flask import Blueprint
+from sqlalchemy.types import PickleType, String
 
 from werkzeug.utils import find_modules
 
@@ -52,23 +53,6 @@ def register_api(bp, view, endpoint, url, pk='item_id', pk_type='int'):
     bp.add_url_rule('{0}<{1}:{2}>'.format(url, pk_type, pk),
                     view_func=view_func,
                     methods=['GET', 'PUT', 'DELETE', 'PATCH'])
-
-
-class JSONEncoder(_json.JSONEncoder):
-    def default(self, o):
-        # See "Date Time String Format" in the ECMA-262 specification.
-        if isinstance(o, datetime):
-            return o.isoformat(sep=' ', timespec='seconds')
-        if isinstance(o, date):
-            return o.isoformat()
-        if isinstance(o, time):
-            return o.isoformat(timespec='seconds')
-        if isinstance(o, decimal.Decimal):
-            return float(o)
-        if isinstance(o, uuid.UUID):
-            return str(o)
-        else:
-            return super().default(o)
 
 
 class DictModel(object):
@@ -113,3 +97,37 @@ class DictModel(object):
         only = self._todict_simple or [x for x in self._get_todict_keys()
                                        if x in ['id', 'name']]
         return self.to_dict(only=only)
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        # See "Date Time String Format" in the ECMA-262 specification.
+        if isinstance(o, datetime):
+            return o.isoformat(sep=' ', timespec='seconds')
+        if isinstance(o, date):
+            return o.isoformat()
+        if isinstance(o, time):
+            return o.isoformat(timespec='seconds')
+        if isinstance(o, decimal.Decimal):
+            return float(o)
+        if isinstance(o, uuid.UUID):
+            return str(o)
+        else:
+            return super().default(o)
+
+
+class JSONPickle:
+    @staticmethod
+    def dumps(obj, *args, **kwargs):
+        return json.dumps(obj, cls=JSONEncoder)
+
+    @staticmethod
+    def loads(obj, *args, **kwargs):
+        return json.loads(obj)
+
+
+class JSONType(PickleType):
+    impl = String(191)
+
+    def __init__(self, pickler=JSONPickle, **kwargs):
+        super().__init__(pickler=pickler, **kwargs)
