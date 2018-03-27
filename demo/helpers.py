@@ -90,7 +90,7 @@ class DictModel(object):
 
     def todict(self, include=None, exclude=None, only=None):
         keys = self._get_todict_keys(include, exclude, only)
-        data = {key: self._get_serial_value(key) for key in keys}
+        data = {key: getattr(self, key) for key in keys}
         return data or None
 
     def todict_simple(self):
