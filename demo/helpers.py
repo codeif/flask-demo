@@ -36,17 +36,17 @@ def register_blueprints(app, import_path, bp_name='bp'):
             app.register_blueprint(bp)
 
 
-def register_api(bp, view, endpoint, url, pk='item_id', pk_type='int'):
+def register_api(bp, view_cls, endpoint, url, pk='item_id', pk_type='int'):
     """register restful api router
 
     :param bp: flask.BluePrint object
-    :param view: flask.views.View object
+    :param view_cls: flask.views.View class
     :param endpoint: endpint
     :param url: url path, eg: /users
     :param pk: entity id variable name
     :param pk_type: http://flask.pocoo.org/docs/0.12/quickstart/#variable-rules
     """
-    view_func = view.as_view(endpoint)
+    view_func = view_cls.as_view(endpoint)
     bp.add_url_rule(url, defaults={pk: None},
                     view_func=view_func, methods=['GET'])
     bp.add_url_rule(url, view_func=view_func, methods=['POST'])
@@ -55,7 +55,7 @@ def register_api(bp, view, endpoint, url, pk='item_id', pk_type='int'):
                     methods=['GET', 'PUT', 'DELETE', 'PATCH'])
 
 
-class DictModel(object):
+class TodictModel(object):
     _todict_include = None
     _todict_exclude = None
     _todict_simple = None
@@ -107,7 +107,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(o, date):
             return o.isoformat()
         if isinstance(o, time):
-            return o.isoformat(timespec='seconds')
+            return o.isoformat(timespec='minutes')
         if isinstance(o, decimal.Decimal):
             return float(o)
         if isinstance(o, uuid.UUID):
