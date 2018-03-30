@@ -42,7 +42,7 @@ def register_api(bp, view_cls, endpoint, url, pk='item_id', pk_type='int'):
     :param bp: flask.BluePrint object
     :param view_cls: flask.views.View class
     :param endpoint: endpint
-    :param url: url path, eg: /users
+    :param url: url path, eg: /users/
     :param pk: entity id variable name
     :param pk_type: http://flask.pocoo.org/docs/0.12/quickstart/#variable-rules
     """
