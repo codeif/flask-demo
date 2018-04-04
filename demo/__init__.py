@@ -47,7 +47,7 @@ def configure_error_handles(app):
         return resp
 
     @app.errorhandler(CustomException)
-    def teddy_exception_handler(e):
+    def custom_exception_handler(e):
         return jsonify(errcode=e.errcode, errmsg=e.errmsg)
 
     @app.errorhandler(FormValidationError)
