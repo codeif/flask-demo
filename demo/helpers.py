@@ -102,6 +102,8 @@ class TodictModel(object):
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         # See "Date Time String Format" in the ECMA-262 specification.
+        if isinstance(o, set):
+            return list(o)
         if isinstance(o, datetime):
             return o.isoformat(sep=' ', timespec='seconds')
         if isinstance(o, date):
