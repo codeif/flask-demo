@@ -23,7 +23,7 @@ def create_app(config=None):
     app = Flask(__name__)
 
     if config is None:
-        config = os.environ.get('DEMO_APP_SETTINGS',
+        config = os.environ.get('DEMO_CONFIG',
                                 'demo.config.Config')
     app.config.from_object(config)
 
