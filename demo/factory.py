@@ -9,11 +9,12 @@
     :license: MIT, see LICENSE for more details.
 """
 
-import os
 import logging
+import os
 
 from flask import Flask
 from flask.logging import PROD_LOG_FORMAT
+
 from celery import Celery
 
 from .core import db, migrate

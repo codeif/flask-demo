@@ -2,11 +2,9 @@
 from flask import Blueprint, render_template
 from flask.views import MethodView
 
-from ..exceptions import NoError, LoginRequired, FormValidationError
-
+from ..exceptions import FormValidationError, LoginRequired, NoError
 from ..forms.login import LoginForm
 from ..tasks import add
-
 
 bp = Blueprint('general', __name__)
 

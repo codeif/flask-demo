@@ -9,12 +9,11 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from flask_script import Manager, Server
 from flask_migrate import MigrateCommand
 
 from demo import create_app
 from demo.core import db
-
+from flask_script import Manager, Server
 
 manager = Manager(create_app)
 

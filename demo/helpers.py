@@ -9,15 +9,14 @@
     :license: MIT, see LICENSE for more details.
 """
 
-import importlib
-from datetime import datetime, date, time
 import decimal
-import uuid
+import importlib
 import json
+import uuid
+from datetime import date, datetime, time
 
 from flask import Blueprint
 from sqlalchemy.types import PickleType, String
-
 from werkzeug.utils import find_modules
 
 

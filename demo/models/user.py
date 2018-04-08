@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
-from sqlalchemy import event, DDL
+from sqlalchemy import DDL, event
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from ..core import db
+from flask_login import UserMixin
+
 from . import BaseModel
+from ..core import db
 
 
 class User(BaseModel, UserMixin):
