@@ -15,9 +15,16 @@ import json
 import uuid
 from datetime import date, datetime, time
 
-from flask import Blueprint
+from flask import Blueprint, Flask, jsonify
 from sqlalchemy.types import PickleType, String
 from werkzeug.utils import find_modules
+
+
+class DictFlask(Flask):
+    def make_response(self, rv):
+        if isinstance(rv, dict):
+            rv = jsonify(rv)
+        return super().make_response(rv)
 
 
 def register_blueprints(app, import_path, bp_name='bp'):
