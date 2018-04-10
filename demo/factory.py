@@ -17,11 +17,11 @@ from flask.logging import PROD_LOG_FORMAT
 from celery import Celery
 
 from .core import db, migrate
-from .helpers import DictFlask
+from .helpers import CustomFlask
 
 
 def create_app(config=None):
-    app = DictFlask(__name__)
+    app = CustomFlask(__name__)
 
     if config is None:
         config = os.environ.get('DEMO_CONFIG',

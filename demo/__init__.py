@@ -3,13 +3,12 @@ from flask import jsonify, request, abort
 from flask_bootstrap import Bootstrap
 
 from . import factory
-from .helpers import register_blueprints, JSONEncoder
+from .helpers import register_blueprints
 from .exceptions import CustomException, FormValidationError
 
 
 def create_app(config=None):
     app = factory.create_app(config)
-    app.json_encoder = JSONEncoder
 
     Bootstrap(app)
     configure_error_handles(app)

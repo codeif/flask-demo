@@ -12,19 +12,14 @@
 import decimal
 import importlib
 import json
+import re
 import uuid
 from datetime import date, datetime, time
 
 from flask import Blueprint, Flask, jsonify
+from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.types import PickleType, String
 from werkzeug.utils import find_modules
-
-
-class DictFlask(Flask):
-    def make_response(self, rv):
-        if isinstance(rv, dict):
-            rv = jsonify(rv)
-        return super().make_response(rv)
 
 
 def register_blueprints(app, import_path, bp_name='bp'):
@@ -102,7 +97,14 @@ class TodictModel(object):
     def todict_simple(self):
         only = self._todict_simple or [x for x in self._get_todict_keys()
                                        if x in ['id', 'name']]
-        return self.to_dict(only=only)
+        return self.todict(only=only)
+
+
+class ModelMixin(TodictModel):
+    @declared_attr
+    def __tablename__(cls):
+        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', cls.__name__)
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -122,6 +124,16 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         else:
             return super().default(o)
+
+
+class CustomFlask(Flask):
+    """使用自定义的JSONEncoder，并能处理view直接返回dict"""
+    json_encoder = JSONEncoder
+
+    def make_response(self, rv):
+        if isinstance(rv, dict):
+            rv = jsonify(rv)
+        return super().make_response(rv)
 
 
 class JSONPickle:
