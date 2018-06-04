@@ -9,14 +9,12 @@
     :license: MIT, see LICENSE for more details.
 """
 
-import logging
 import os
 
-from flask.logging import PROD_LOG_FORMAT
-
 from celery import Celery
+from flask_migrate import Migrate
 
-from .core import db, migrate
+from .core import db
 from .helpers import CustomFlask
 
 
@@ -24,23 +22,12 @@ def create_app(config=None):
     app = CustomFlask(__name__)
 
     if config is None:
-        config = os.environ.get('DEMO_CONFIG',
-                                'demo.config.Config')
+        config = os.environ.get('DEMO_CONFIG')
+    assert config
     app.config.from_object(config)
 
-    if not app.debug:
-        handler = logging.StreamHandler()
-        handler.setFormatter(logging.Formatter(PROD_LOG_FORMAT))
-
-        logger_level = app.config.get('LOG_LEVEL')
-        if logger_level is not None:
-            handler.setLevel(logger_level)
-            app.logger.setLevel(logger_level)
-
-        app.logger.addHandler(handler)
-
     db.init_app(app)
-    migrate.init_app(app, db)
+    Migrate(app, db)
 
     return app
 

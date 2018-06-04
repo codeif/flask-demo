@@ -18,7 +18,6 @@ from datetime import date, datetime, time
 
 from flask import Blueprint, Flask, jsonify
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.types import PickleType, String
 from werkzeug.utils import find_modules
 
 
@@ -56,7 +55,7 @@ def register_api(bp, view_cls, endpoint, url, pk='item_id', pk_type='int'):
                     methods=['GET', 'PUT', 'DELETE', 'PATCH'])
 
 
-class TodictModel(object):
+class TodictMixin:
     _todict_include = None
     _todict_exclude = None
     _todict_simple = None
@@ -100,11 +99,15 @@ class TodictModel(object):
         return self.todict(only=only)
 
 
-class ModelMixin(TodictModel):
+class TableNameMixin:
     @declared_attr
     def __tablename__(cls):
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', cls.__name__)
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+class BaseModel(TodictMixin, TableNameMixin):
+    pass
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -134,20 +137,3 @@ class CustomFlask(Flask):
         if isinstance(rv, dict):
             rv = jsonify(rv)
         return super().make_response(rv)
-
-
-class JSONPickle:
-    @staticmethod
-    def dumps(obj, *args, **kwargs):
-        return json.dumps(obj, cls=JSONEncoder)
-
-    @staticmethod
-    def loads(obj, *args, **kwargs):
-        return json.loads(obj)
-
-
-class JSONType(PickleType):
-    impl = String(191)
-
-    def __init__(self, pickler=JSONPickle, **kwargs):
-        super().__init__(pickler=pickler, **kwargs)

@@ -12,9 +12,7 @@
 from werkzeug.local import LocalProxy
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from ..helpers import ModelMixin
+from ..helpers import BaseModel
 
 logger = LocalProxy(lambda: current_app.logger)
-db = SQLAlchemy(model_class=ModelMixin)
-migrate = Migrate()
+db = SQLAlchemy(model_class=BaseModel)
