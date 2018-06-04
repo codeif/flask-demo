@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from flask import jsonify, request, abort
 from flask_bootstrap import Bootstrap
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from flask_login import UserMixin
 from sqlalchemy import DDL, event
 from sqlalchemy.ext.hybrid import hybrid_property
