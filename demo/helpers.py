@@ -191,12 +191,9 @@ class BaseItemView(MethodView, PaginationMixin):
     def put(self, item_id):
         if self.item_form_cls is None:
             abort(405)
-        if item_id:
-            item = self.get_item(item_id)
-        else:
-            item = None
+        item = self.get_item(item_id)
 
-        form = self.item_form_cls(item=item)
+        form = self.item_form_cls(item)
         if form.validate():
             item = form.save()
             return item.todict()
