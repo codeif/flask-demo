@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from flask import request
-from . import DateField as DateField_
-from . import DateTimeField as DateTimeField_
-from . import Field, Form
-from . import IntegerField as IntegerField_
-from . import PasswordField
-from . import SelectField as SelectField_
-from . import SelectMultipleField
+from wtforms import DateField as DateField_
+from wtforms import DateTimeField as DateTimeField_
+from wtforms import DecimalField, Field, Form
+from wtforms import IntegerField as IntegerField_
+from wtforms import PasswordField
+from wtforms import SelectField as SelectField_
+from wtforms import SelectMultipleField
 
 from ..exceptions import FormValidationError
 
@@ -26,6 +26,7 @@ __all__ = (
     'SelectField',
     'SelectMultipleField',
     'StringField',
+    'DecimalField',
 )
 
 
@@ -48,6 +49,11 @@ class BaseItemForm(JSONForm):
     def __init__(self, item):
         self.item = item
         super().__init__()
+
+
+class BaseQueryForm(Form):
+    def __init__(self):
+        super().__init__(formdata=request.args)
 
 
 class StringField(Field):

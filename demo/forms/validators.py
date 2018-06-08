@@ -1,11 +1,11 @@
 import re
-from .validators import (
+
+from wtforms.validators import (
     URL, UUID, AnyOf, DataRequired, Email, EqualTo, InputRequired, IPAddress, Length, MacAddress, NoneOf, NumberRange)
-from .validators import Optional as Optional_
-from .validators import (
+from wtforms.validators import Optional as Optional_
+from wtforms.validators import (
     Regexp, StopValidation, ValidationError, any_of, data_required, email, equal_to, input_required, ip_address, length,
     mac_address, none_of, number_range, regexp, url)
-
 
 __all__ = (
     'DataRequired', 'data_required', 'Email', 'email', 'EqualTo', 'equal_to',
