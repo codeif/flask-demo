@@ -15,9 +15,11 @@ import re
 import uuid
 from datetime import date, datetime, time
 
-from flask import Blueprint, Flask, jsonify
+from flask import Blueprint, Flask, jsonify, abort
+from flask.views import MethodView
 from sqlalchemy.ext.declarative import declared_attr
 from werkzeug.utils import find_modules
+from .exceptions import FormValidationError
 
 
 def register_blueprints(app, import_path, bp_name='bp'):
@@ -136,3 +138,70 @@ class CustomFlask(Flask):
         if isinstance(rv, dict):
             rv = jsonify(rv)
         return super().make_response(rv)
+
+
+# Views Mixin
+class PaginationMixin:
+    def item_todict(self, item):
+        return item.todict()
+
+    def make_resp(self, query):
+        return jsonify(items=[self.item_todict(x) for x in query])
+
+    def make_pagination_resp(self, query):
+        p = query.paginate()
+        return jsonify(
+            items=[self.item_todict(x) for x in p.items],
+            total=p.total,
+            page=p.page,
+            per_page=p.per_page,
+            pages=p.pages
+        )
+
+
+class BaseItemView(MethodView, PaginationMixin):
+    item_cls = None
+    item_form_cls = None
+    items_pagination = False
+
+    def get_item(self, item_id):
+        if not self.item_cls:
+            abort(405)
+        if item_id is None:
+            return
+        return self.item_cls.query.get_or_404(item_id)
+
+    def get_items_query(self):
+        return self.item_cls.query
+
+    def get(self, item_id):
+        if item_id:
+            item = self.get_item(item_id)
+            return self.item_todict(item)
+        else:
+            query = self.get_items_query()
+            if not self.items_pagination:
+                return self.make_resp(query)
+            else:
+                return self.make_pagination_resp(query)
+
+    def post(self):
+        return self.put(None)
+
+    def put(self, item_id):
+        if self.item_form_cls is None:
+            abort(405)
+        if item_id:
+            item = self.get_item(item_id)
+        else:
+            item = None
+
+        form = self.item_form_cls(item=item)
+        if form.validate():
+            item = form.save()
+            return item.todict()
+        else:
+            raise FormValidationError(form)
+
+    def delete(self, item_id):
+        abort(405)
