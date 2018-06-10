@@ -15,10 +15,11 @@ import re
 import uuid
 from datetime import date, datetime, time
 
-from flask import Blueprint, Flask, jsonify, abort
+from flask import Blueprint, Flask, abort, jsonify
 from flask.views import MethodView
 from sqlalchemy.ext.declarative import declared_attr
 from werkzeug.utils import find_modules
+
 from .exceptions import FormValidationError
 
 
@@ -126,6 +127,8 @@ class JSONEncoder(json.JSONEncoder):
             return float(o)
         if isinstance(o, uuid.UUID):
             return str(o)
+        if isinstance(o, TodictMixin):
+            return o.todict_simple()
         else:
             return super().default(o)
 
@@ -162,6 +165,7 @@ class PaginationMixin:
 class BaseItemView(MethodView, PaginationMixin):
     item_cls = None
     item_form_cls = None
+    query_form_cls = None
     items_pagination = False
 
     def get_item(self, item_id):
@@ -172,7 +176,10 @@ class BaseItemView(MethodView, PaginationMixin):
         return self.item_cls.query.get_or_404(item_id)
 
     def get_items_query(self):
-        return self.item_cls.query
+        if self.query_form_cls is None:
+            return self.item_cls.query
+        else:
+            return self.query_form_cls().query()
 
     def get(self, item_id):
         if item_id:
