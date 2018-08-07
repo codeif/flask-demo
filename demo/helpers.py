@@ -15,6 +15,7 @@ import re
 import uuid
 from datetime import date, datetime, time
 
+import requests
 from flask import Blueprint, Flask, abort, jsonify
 from flask.views import MethodView
 from sqlalchemy.ext.declarative import declared_attr
@@ -140,6 +141,8 @@ class CustomFlask(Flask):
     def make_response(self, rv):
         if isinstance(rv, dict):
             rv = jsonify(rv)
+        elif isinstance(rv, requests.Response):
+            rv = jsonify(rv.json()), rv.status_code
         return super().make_response(rv)
 
 
