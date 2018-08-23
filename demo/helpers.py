@@ -73,7 +73,7 @@ class TodictMixin:
         if only:
             return only
 
-        exclude_set = {'password', 'insert_time'}
+        exclude_set = {'password', 'created_at'}
         if self._todict_exclude:
             exclude_set.update(self._todict_exclude)
         if exclude:
@@ -158,10 +158,12 @@ class PaginationMixin:
         p = query.paginate()
         return jsonify(
             items=[self.item_todict(x) for x in p.items],
-            total=p.total,
-            page=p.page,
-            per_page=p.per_page,
-            pages=p.pages
+            pagination=dict(
+                total=p.total,
+                page=p.page,
+                per_page=p.per_page,
+                pages=p.pages
+            ),
         )
 
 
